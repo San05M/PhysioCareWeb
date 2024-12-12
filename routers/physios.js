@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 
 let Physio = require(__dirname + "/../models/physio.js");
-const { protegerRuta } = require("./../auth/auth");
 const User = require(__dirname + "/../models/user.js");
 
 let router = express.Router();
