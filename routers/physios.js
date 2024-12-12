@@ -8,7 +8,7 @@ const User = require(__dirname + "/../models/user.js");
 let router = express.Router();
 
 /* Obtener un listado de todos los pacientes */
-router.get("/", protegerRuta(["admin", "physio", "patient"]), (req, res) => {
+router.get("/", (req, res) => {
   Physio.find()
     .then((resultado) => {
       if (resultado) {
@@ -28,7 +28,7 @@ router.get("/", protegerRuta(["admin", "physio", "patient"]), (req, res) => {
     });
 });
 
-router.get("/find", protegerRuta(["admin", "physio", "patient"]), (req, res) => {
+router.get("/find", (req, res) => {
   console.log(req.query)
   Physio.find({
     specialty: { $regex: req.query.specialty },
@@ -49,7 +49,7 @@ router.get("/find", protegerRuta(["admin", "physio", "patient"]), (req, res) => 
 });
 
 /* Servicio de listado por id de un paciente en específico */
-router.get("/:id", protegerRuta(["admin", "physio", "patient"]), (req, res) => {
+router.get("/:id", (req, res) => {
   Physio.findById(req.params.id)
     .then((resultado) => {
       if (resultado)
@@ -73,7 +73,6 @@ router.get("/:id", protegerRuta(["admin", "physio", "patient"]), (req, res) => {
 /* Buscar un physio por nombre o apellido */
 router.get(
   "/find",
-  protegerRuta(["admin", "physio", "patient"]),
   (req, res) => {
     Physio.find({
       surname: { $regex: req.query.surname, $options: "i" },
@@ -95,7 +94,7 @@ router.get(
 );
 
 /* Se añadirá el physio que se reciba en la petición a la colección de pacientes. */
-router.post("/", protegerRuta(["admin"]), async (req, res) => {
+router.post("/",  async (req, res) => {
   try {
     console.log(req.body)
     const hash = bcrypt.hashSync(req.body.password, 10);
@@ -144,7 +143,7 @@ router.post("/", protegerRuta(["admin"]), async (req, res) => {
 });
 
 /* Actualizar los datos a un physio. Revisar este. */
-router.put("/:id", protegerRuta(["admin"]), async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const resultado = await Physio.findByIdAndUpdate(req.params.id, {
       $set: {
@@ -168,7 +167,7 @@ router.put("/:id", protegerRuta(["admin"]), async (req, res) => {
 });
 
 /* Para borrar un physio por id. */
-router.put("/:id", protegerRuta(["admin"]), async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     await Physio.findByIdAndDelete(req.params.id).then((resultado) => {
       if (resultado) {
