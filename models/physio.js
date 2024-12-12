@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-let physiosSchema = new mongoose.Schema({
+let physioSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -26,5 +26,5 @@ let physiosSchema = new mongoose.Schema({
   }
 });
 
-let Physio = mongoose.model('physios', physiosSchema);
+let Physio = mongoose.model('physios', physioSchema);
 module.exports = Physio;

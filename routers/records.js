@@ -1,12 +1,11 @@
 const express = require("express");
 
 let Records = require(__dirname + "/../models/record.js");
-const { protegerIdPaciente, protegerRuta } = require("./../auth/auth");
 
 let router = express.Router();
 
 /* Obtener un listado de todos los records */
-router.get("/", protegerRuta(["admin", "physio"]), (req, res) => {
+router.get("/", (req, res) => {
   Records.find()
     .populate("patient")
     .then((resultado) => {
@@ -30,8 +29,6 @@ router.get("/", protegerRuta(["admin", "physio"]), (req, res) => {
 /* Servicio de listado por id de un record en específico */
 router.get(
   "/:id",
-  protegerRuta(["admin", "physio", "patient"]),
-  protegerIdPaciente(),
   (req, res) => {
     Records.findById(req.params.id)
       .populate("patient")
@@ -56,7 +53,7 @@ router.get(
 );
 
 /* Buscar un record por nombre o apellido */
-router.get("/find", protegerRuta(["admin", "physio"]), (req, res) => {
+router.get("/find", (req, res) => {
   Patient.find({ surname: req.query.surname })
     .then((resultadoId) => {
       let resultId = resultadoId.map((pat) => pat.id);
@@ -84,7 +81,7 @@ router.get("/find", protegerRuta(["admin", "physio"]), (req, res) => {
 });
 
 /* Se añadirá el record. */
-router.post("/", protegerRuta(["admin", "physio"]), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     let record = new Records({
       patient: req.body.patient,
@@ -102,7 +99,7 @@ router.post("/", protegerRuta(["admin", "physio"]), async (req, res) => {
 
 /* Para borrar un record por id. */
 
-router.put("/:id", protegerRuta(["admin", "physio"]), async (req, res) => {
+router.put("/:id",  async (req, res) => {
   try {
     const resultado = await Records.findOneAndDelete({
       patient: req.params.id,
