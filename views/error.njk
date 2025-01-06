@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+        <style>
+            /* Estilo para la alerta de error */
+            .alert-danger {
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+                color: #721c24;
+                padding: 20px;
+                font-size: 1.2rem;
+                border-radius: 10px;
+            }
+            h1 {
+                color: #721c24;
+                font-family: 'Georgia', serif;
+                font-size: 3rem;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Error</h1>
+            <div class="alert alert-danger">
+                {% if error %}
+                    {{ error }}
+                {% else %}
+                    Error en la aplicación
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>
