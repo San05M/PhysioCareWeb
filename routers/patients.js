@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 /* Obtener un listado de todos los pacientes */
 router.get("/", (req, res) => {
   Patient.find()
-    .then((resultado) => {
+    .then(resultado => {
       res
         .status(200)
         .render("patients/patients_list", { patients: resultado});
@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 // Buscar para editar
 router.get("/editar/:id", (req, res) => {
   Patient.findById(req.params["id"])
-    .then((resultado) => {
+    .then(resultado => {
       if (resultado) {
         res.render("patients/patient_edit", { patient: resultado });
       } else {
@@ -46,8 +46,7 @@ router.get("/editar/:id", (req, res) => {
 
 /* Servicio de listado por id de un paciente en específico */
 router.get("/:id", (req, res) => {
-  Patient.findById(req.params.id["id"])
-    .then((resultado) => {
+  Patient.findById(req.params["id"]).then(resultado => {
       if (resultado) {
         res.render("patients/patient_detail", { patient: resultado});
       } else {
