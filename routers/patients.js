@@ -1,110 +1,88 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 
 let Patient = require(__dirname + "/../models/patient.js");
-const User = require(__dirname + "/../models/user.js");
 
 let router = express.Router();
+
+// Ejercicio: Middleware para mostrar información de la petición recibida
+router.use((req, res, next) => {
+  console.log(
+    new Date().toString(),
+    "Método:",
+    req.method,
+    ", URL:",
+    req.baseUrl
+  );
+  next();
+});
 
 /* Obtener un listado de todos los pacientes */
 router.get("/", (req, res) => {
   Patient.find()
     .then((resultado) => {
-      if (resultado) {
-        res
-          .status(200) 
-          .send({ ok: true, result: resultado });
-      } else {
-        res
-          .status(404) 
-          .send({ ok: false, result: "Error. No hay pacientes." });
-      }
+      res
+        .status(200)
+        .render("patients/patients_list", { patients: resultado});
     })
     .catch((error) => {
-      res
-        .status(500) 
-        .send({ ok: false, error: "Error obteniendo pacientes." });
+      res.render("error", { error: "Error registrando libro" });
     });
 });
 
-/* Buscar un paciente por nombre o apellido */
-router.get("/find", (req, res) => {
-  Patient.find({
-    surname: { $regex: req.query.surname, $options: "i" },
-  })
+// Buscar para editar
+router.get("/editar/:id", (req, res) => {
+  Patient.findById(req.params["id"])
     .then((resultado) => {
-      if (resultado) res.status(200).send({ result: resultado });
-      else
-        res.status(404).send({
-          ok: false,
-          error: "Error. No se han obtenido pacientes con esos criterios.",
-        });
+      if (resultado) {
+        res.render("patients/patient_edit", { patient: resultado });
+      } else {
+        res.render("error", { error: "Paciente no encontrado" });
+      }
     })
     .catch((error) => {
-      res
-        .status(500)
-        .send({ ok: false, error: error + " Error interno del servidor." });
+      res.render("error", { error: "Paciente no encontrado 2" });
     });
 });
 
 /* Servicio de listado por id de un paciente en específico */
 router.get("/:id", (req, res) => {
-  Patient.findById(req.params.id)
+  Patient.findById(req.params.id["id"])
     .then((resultado) => {
-      if (resultado)
-        res.status(200).send({
-          ok: true,
-          result: resultado,
-        });
-      else
-        res
-          .status(404) 
-          .send({ ok: false, error: "No se han encontrado paciente" });
+      if (resultado) {
+        res.render("patients/patient_detail", { patient: resultado});
+      } else {
+        res.render("error", { error: "Patient no encontradoboooo" });
+      }
     })
     .catch((error) => {
-      res
-        .status(500) 
-        .send({ ok: false, error: error + " Error interno del sevidor." });
+      res.render("error", { error: "Error buscando patient" });
     });
 });
 
 /* Se añadirá el paciente que se reciba en la petición a la colección de pacientes. */
-router.post("/",  async (req, res) => {
-  try {
-    const hash = bcrypt.hashSync(req.body.password, 10);
-    /* Creación de usuario */
-    let usuario = new User({
-      login: req.body.login,
-      password: hash,
-      rol: "patient",
+router.post("/", (req, res) => {
+  let nuevoPaciente = new Libro({
+    name: req.body.name,
+    surname: req.body.surname,
+    birthDate: new Date(req.body.birthDate),
+    address: req.body.address,
+    insuranceNumber: req.body.insuranceNumber,
+  });
+  nuevoPaciente
+    .save()
+    .then((resultado) => {
+      res.redirect(req.baseUrl);
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error añadiendo paciente" });
     });
-
-    const usuarioObtenido = await usuario.save();
-
-    const id = usuarioObtenido._id;
-
-    let nuevoPaciente = new Patient({
-      _id: id,
-      name: req.body.name,
-      surname: req.body.surname,
-      birthDate: req.body.birthDate,
-      address: req.body.address,
-      insuranceNumber: req.body.insuranceNumber,
-    });
-
-    const resultado = await nuevoPaciente.save();
-    res.status(201).send({ result: resultado });
-  } catch (error) {
-    res
-      .status(400)
-      .send({ ok: false, error: error + "Error al insertar un paciente." });
-  }
 });
 
 /* Actualizar los datos a un paciente. Revisar este. */
-router.put("/:id", protegerRuta(["admin", "physio"]), async (req, res) => {
-  try {
-    const resultado = await Patient.findByIdAndUpdate(req.params.id, {
+router.post("/:id", (req, res) => {
+  Patient.findByIdAndUpdate(
+    req.params.id,
+    {
       $set: {
         name: req.body.name,
         surname: req.body.surname,
@@ -112,38 +90,26 @@ router.put("/:id", protegerRuta(["admin", "physio"]), async (req, res) => {
         address: req.body.address,
         insuranceNumber: req.body.insuranceNumber,
       },
+    },
+    { new: true }
+  )
+    .then((resultado) => {
+      res.redirect(req.baseUrl);
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error modificando paciente." });
     });
-    if (resultado) {
-      res.status(200).send({ result: resultado });
-    } else {
-      res.status(400).send({
-        ok: false,
-        error: "Error actualizando los datos del paciente",
-      });
-    }
-  } catch (error) {
-    res.status(500).send({ ok: false, error: error + "Error en el servidor." });
-  }
 });
 
-/* Para borrar un usuario por id. */
-router.put("/:id",  async (req, res) => {
-  try {
-    await Patient.findByIdAndDelete(req.params.id).then((resultado) => {
-      if (resultado) {
-        User.findByIdAndDelete(req.params.id).then((resultadoId) => {
-          res.status(200).send({ result: resultadoId });
-        });
-      } else {
-        res.status(404).send({
-          ok: false,
-          error: "Error. El paciente no existe.",
-        });
-      }
+// Borrado
+router.delete("/:id", (req, res) => {
+  Patient.findByIdAndRemove(req.params.id)
+    .then((resultado) => {
+      res.redirect(req.baseUrl);
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error borrando patient" });
     });
-  } catch (error) {
-    res.status(500).send({ ok: false, error: error + "Error en el servidor." });
-  }
 });
 
 module.exports = router;

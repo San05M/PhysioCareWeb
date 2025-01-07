@@ -1,5 +1,4 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 
 let Physio = require(__dirname + "/../models/physio.js");
 const User = require(__dirname + "/../models/user.js");

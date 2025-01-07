@@ -30,13 +30,13 @@ app.use(express.json()); // Debe ir antes de los enrutadores y del bootstrap.
 app.use(express.urlencoded({ extended: true }));
 
 // Método para borrar.  Librería externa.
-app.use(methodOverride(function (req, res) {
+/* app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       let method = req.body._method;
       delete req.body._method;
       return method;
     } 
-}));
+})); */
 
 /* Carga estática*/
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
@@ -48,8 +48,8 @@ app.use(express.json());
 app.use('/patients', patients);
 app.use('/records', records);
 app.use('/physios', physios);
-app.use('/login', login);
+/* app.use('/login', login); */
 
 
 /* Puesta en marcha del servidor. Usamos variables de entorno para mayor seguridad. */
-app.listen(process.env.PUERTO);
+app.listen(8080);
