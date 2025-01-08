@@ -3,14 +3,21 @@ let Physio = require(__dirname + "/../models/physio.js");
 
 let router = express.Router();
 
-// Ejercicio: Middleware para mostrar información de la petición recibida
+/**
+ * Middleware to log request information.
+ * Logs the current date, HTTP method, and URL.
+ */
 router.use((req, res, next) => {
   console.log(new Date().toString(), "Método:", req.method);
   ", URL:", req.baseUrl;
   next();
 });
 
-/* Obtener un listado de todos s */
+/**
+ * GET /
+ * Retrieve a list of all physios.
+ * Renders the physios list view.
+ */
 router.get("/", (req, res) => {
   Physio.find()
     .then((resultado) => {
@@ -21,84 +28,56 @@ router.get("/", (req, res) => {
     });
 });
 
-// Buscar para editar
+/**
+ * GET /edit/:id
+ * Retrieve a specific physio for editing by ID.
+ * Renders the physio edit view.
+ */
 router.get("/editar/:id", (req, res) => {
   Physio.findById(req.params["id"])
     .then((resultado) => {
       if (resultado) {
         res.render("physios/physio_edit", { physio: resultado });
       } else {
-        res.render("error", { error: "Physio no encontrado" });
+        res.render("error", { error: "Physio not found" });
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Phys no encontrado 2" });
+      res.render("error", { error: "Physio not found" });
     });
 });
 
-/* Servicio de listado por id de en específico */
+/**
+ * GET /:id
+ * Retrieve details of a specific physio by ID.
+ * Renders the physio detail view.
+ */
 router.get("/:id", (req, res) => {
   Physio.findById(req.params["id"])
     .then((resultado) => {
       if (resultado) {
         res.render("physios/physio_detail", { physio: resultado });
       } else {
-        res.render("error", { error: "physio no encontrado" });
+        res.render("error", { error: "Physio not found" });
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Error buscando physio" });
+      res.render("error", { error: "Error findingphysio" });
     });
 });
 
-/* Se añadirá que se reciba en la petición a la coleccións. */
-router.post("/", (req, res) => {
-  let newPhysio = new Libro({
-    name: req.body.name,
-    surname: req.body.surname,
-    specialty: req.body.address,
-    licenseNumber: req.body.insuranceNumber,
-  });
-  newPhysio
-    .save()
-    .then((resultado) => {
-      res.redirect(req.baseUrl);
-    })
-    .catch((error) => {
-      res.render("error", { error: "Error añadiendo Phys" });
-    });
-});
-
-/* Actualizar los datos a. Revisar este. */
-router.post("/:id", (req, res) => {
-  Physio.findByIdAndUpdate(
-    req.params.id,
-    {
-      $set: {
-        name: req.body.name,
-        surname: req.body.surname,
-        specialty: req.body.address,
-        licenseNumber: req.body.insuranceNumber,
-      },
-    },
-    { new: true }
-  )
-    .then((resultado) => {
-      res.redirect(req.baseUrl);
-    })
-    .catch((error) => {
-      res.render("error", { error: "Error modificando Phys." });
-    });
-});
-
-// Borrado
+/**
+ * DELETE /:id
+ * Remove a physio by ID.
+ * Redirects to the physio list.
+ */
 router.delete("/:id", (req, res) => {
   Physio.findByIdAndRemove(req.params.id)
     .then((resultado) => {
       res.redirect(req.baseUrl);
     })
     .catch((error) => {
-      res.render("error", { error: "Error borrando physio" });
+      res.render("error", { error: "Error deleting physio" });
     });
 });
 

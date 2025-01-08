@@ -4,7 +4,10 @@ let Patient = require(__dirname + "/../models/patient.js");
 
 let router = express.Router();
 
-// Ejercicio: Middleware para mostrar información de la petición recibida
+/**
+ * Middleware to log request information.
+ * Logs the current date, HTTP method, and URL.
+ */
 router.use((req, res, next) => {
   console.log(
     new Date().toString(),
@@ -16,7 +19,11 @@ router.use((req, res, next) => {
   next();
 });
 
-/* Obtener un listado de todos los pacientes */
+/**
+ * GET /
+ * Retrieve a list of all patients.
+ * Renders the patients list view.
+ */
 router.get("/", (req, res) => {
   Patient.find()
     .then(resultado => {
@@ -25,11 +32,15 @@ router.get("/", (req, res) => {
         .render("patients/patients_list", { patients: resultado});
     })
     .catch((error) => {
-      res.render("error", { error: "Error registrando libro" });
+      res.render("error", { error: "Error registering patient" });
     });
 });
 
-// Buscar para editar
+/**
+ * GET /edit:id
+ * Retrieve a specific patient for editing by ID.
+ * Renders the patient edit view.
+ */
 router.get("/editar/:id", (req, res) => {
   Patient.findById(req.params["id"])
     .then(resultado => {
@@ -44,70 +55,36 @@ router.get("/editar/:id", (req, res) => {
     });
 });
 
-/* Servicio de listado por id de un paciente en específico */
+/**
+ * GET /:id
+ * Retrieve details of a specific patient by ID.
+ * Renders the patient detail view.
+ */
 router.get("/:id", (req, res) => {
   Patient.findById(req.params["id"]).then(resultado => {
       if (resultado) {
         res.render("patients/patient_detail", { patient: resultado});
       } else {
-        res.render("error", { error: "Patient no encontradoboooo" });
+        res.render("error", { error: "Patient not found" });
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Error buscando patient" });
+      res.render("error", { error: "Patient not found" });
     });
 });
 
-/* Se añadirá el paciente que se reciba en la petición a la colección de pacientes. */
-router.post("/", (req, res) => {
-  let nuevoPaciente = new Libro({
-    name: req.body.name,
-    surname: req.body.surname,
-    birthDate: new Date(req.body.birthDate),
-    address: req.body.address,
-    insuranceNumber: req.body.insuranceNumber,
-  });
-  nuevoPaciente
-    .save()
-    .then((resultado) => {
-      res.redirect(req.baseUrl);
-    })
-    .catch((error) => {
-      res.render("error", { error: "Error añadiendo paciente" });
-    });
-});
-
-/* Actualizar los datos a un paciente. Revisar este. */
-router.post("/:id", (req, res) => {
-  Patient.findByIdAndUpdate(
-    req.params.id,
-    {
-      $set: {
-        name: req.body.name,
-        surname: req.body.surname,
-        birthDate: new Date(req.body.birthDate),
-        address: req.body.address,
-        insuranceNumber: req.body.insuranceNumber,
-      },
-    },
-    { new: true }
-  )
-    .then((resultado) => {
-      res.redirect(req.baseUrl);
-    })
-    .catch((error) => {
-      res.render("error", { error: "Error modificando paciente." });
-    });
-});
-
-// Borrado
+/**
+ * DELETE /:id
+ * Remove a patient by ID.
+ * Redirects to the patient list.
+ */
 router.delete("/:id", (req, res) => {
   Patient.findByIdAndRemove(req.params.id)
     .then((resultado) => {
       res.redirect(req.baseUrl);
     })
     .catch((error) => {
-      res.render("error", { error: "Error borrando patient" });
+      res.render("error", { error: "Error deleting" });
     });
 });
 
