@@ -5,7 +5,7 @@
 {% block contenido %}
 <div class="container-fluid" style="background-color: #f3efe0; color: #4b5320; min-height: 100vh; padding: 20px;">
     <h1 class="text-center my-4" style="color: #4b5320; font-family: 'Georgia', serif; font-weight: bold;">
-    Physio's list
+    List of physios
     </h1>
 
     <div class="table-responsive" style="background: #e6ddc4; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
@@ -30,15 +30,15 @@
                     <td style="font-family: 'Georgia', serif;">{{ physio.licenseNumber }}</td>
                     <td class="text-center d-flex justify-content-center gap-2">
                         <a href="/physios/{{ physio.id }}" class="btn btn-sm" style="background-color: #8f9779; color: #f3efe0; border: none; padding: 5px 10px; border-radius: 5px;">
-                            Ficha
+                            File
                         </a>
                         <a href="/physios/editar/{{ physio.id }}" class="btn btn-sm" style="background-color: #c3b091; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
-                            Editar
+                            Edit
                         </a>
                         <form action="/physios/{{ physios.id }}" method="post" class="d-inline">
                             <input type="hidden" name="_method" value="delete">
                             <button type="submit" class="btn btn-sm" style="background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
-                                Borrar
+                                Delete
                             </button>
                         </form>
                     </td>
@@ -46,7 +46,7 @@
                 {% else %}
                 <tr>
                     <td colspan="3" class="text-center" style="color: #8f9779; font-size: 1.2rem; font-style: italic;">
-                        No hay libros que mostrar.
+                        No physios to show.
                     </td>
                 </tr>
                 {% endfor %}
@@ -56,7 +56,6 @@
 </div>
 
 <style>
-    /* Hover effect para los botones */
     .btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -67,24 +66,23 @@
         transition: all 0.3s ease;
     }
 
-    /* Efecto de hover para los botones */
     .btn {
         border-radius: 5px;
         padding: 8px 15px;
     }
     
     .btn.btn-sm:hover {
-        background-color: #7b8a3f; /* Color de hover verde musgo para el primer botón */
+        background-color: #7b8a3f; 
         color: #fff;
     }
 
     .btn.btn-sm:nth-child(2):hover {
-        background-color: #b8a577; /* Color de hover marrón oscuro para el segundo botón */
+        background-color: #b8a577; 
         color: #fff;
     }
 
     .btn.btn-sm:nth-child(3):hover {
-        background-color: #a68c60; /* Color de hover marrón claro para el tercer botón */
+        background-color: #a68c60; 
         color: #fff;
     }
 </style>

@@ -1,11 +1,11 @@
 {% extends "base.njk" %}
 
-{% block titulo %} physio | Details {% endblock %}
+{% block titulo %} Physio | Details {% endblock %}
 
 {% block contenido %}
     <div class="card mt-4" style="background-color: #e6ddc4; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
         <div class="card-header text-center" style="background-color: #4b5320; color: #fff; font-size: 1.8rem; font-family: 'Georgia', serif;">
-            Ficha de un Physio
+            Physio File
         </div>
         
         <div class="card-body">
@@ -21,8 +21,8 @@
         </div>
 
         <div class="card-footer text-center">
-            <a href="/physios" class="btn btn-primary" style="padding: 10px 20px; background-color: #8f9779; border: none; ">Volver al listado</a>
-            <a href="/physios/editar/{{ physio.id }}" class="btn btn-primary" style="background-color: #c3b091; border: none; padding: 10px 20px; border-radius: 5px;" >Editar physio</a>
+            <a href="/physios" class="btn btn-primary" style="padding: 10px 20px; background-color: #8f9779; border: none; ">Back</a>
+            <a href="/physios/editar/{{ physio.id }}" class="btn btn-primary" style="background-color: #c3b091; border: none; padding: 10px 20px; border-radius: 5px;" >Edit</a>
         </div>
     </div>
 

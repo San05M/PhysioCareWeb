@@ -5,7 +5,7 @@
 {% block contenido %}
 <div class="container-fluid" style="background-color: #f3efe0; color: #4b5320; min-height: 100vh; padding: 20px;">
     <h1 class="text-center my-4" style="color: #4b5320; font-family: 'Georgia', serif; font-weight: bold;">
-    record's list
+    List of records
     </h1>
 
     <div class="table-responsive" style="background: #e6ddc4; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
@@ -26,7 +26,7 @@
                     <td style="font-family: 'Georgia', serif;">{{ record.patient.surname}}</td>
                     <td class="text-center d-flex justify-content-center gap-2">
                         <a href="/records/{{ record.id }}" class="btn btn-sm" style="background-color: #8f9779; color: #f3efe0; border: none; padding: 5px 10px; border-radius: 5px;">
-                            Ficha
+                            File
                         </a>
                         <a href="/records/new/{{ record.id }}" class="btn btn-sm" style="background-color: #c3b091; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
                             Add appointment
@@ -34,7 +34,7 @@
                         <form action="/records/{{ record.id }}" method="post" class="d-inline">
                             <input type="hidden" name="_method" value="delete">
                             <button type="submit" class="btn btn-sm" style="background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
-                                Borrar
+                                Delete
                             </button>
                         </form>
                     </td>
@@ -42,7 +42,7 @@
                 {% else %}
                 <tr>
                     <td colspan="3" class="text-center" style="color: #8f9779; font-size: 1.2rem; font-style: italic;">
-                        No hay records que mostrar.
+                        No records to show.
                     </td>
                 </tr>
                 {% endfor %}

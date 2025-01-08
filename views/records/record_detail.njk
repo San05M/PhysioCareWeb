@@ -1,4 +1,4 @@
-{% extends "base.njk" %} {% block titulo %} record | Details {% endblock %} {%
+{% extends "base.njk" %} {% block titulo %} Record | Details {% endblock %} {%
 block contenido %}
 <div
   class="card mt-4"
@@ -17,7 +17,7 @@ block contenido %}
       font-family: 'Georgia', serif;
     "
   >
-    Ficha de un record
+    Record file
   </div>
 
   <div class="card-body">
@@ -33,14 +33,16 @@ block contenido %}
       <div>
         {% for appointment in record.appointments%}
         <div
-        style=" 
-        background-color:rgb(242, 233, 209);
-        border-radius: 15px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 5px;">
+          style="
+            background-color: rgb(242, 233, 209);
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 5px;
+          "
+        >
           <p><strong>Date:</strong> {{ appointment.date }}</p>
-          <p><strong>Physio:</strong> {{ appointment.physio.name }}</p>
+          <p><strong>Physio:</strong> {{ appointment.physio }}</p>
           <p><strong>Diagnosis:</strong> {{ appointment.diagnosis }}</p>
           <p><strong>Tratment:</strong> {{ appointment.treatment }}</p>
           <p><strong>Observations:</strong> {{ appointment.observations }}</p>
@@ -55,7 +57,7 @@ block contenido %}
       href="/records"
       class="btn btn-primary"
       style="padding: 10px 20px; background-color: #8f9779; border: none"
-      >Volver al listado</a
+      >Back</a
     >
   </div>
 </div>
