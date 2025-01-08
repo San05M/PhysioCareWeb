@@ -1,7 +1,63 @@
-{% extends "base.njk" %}
+{% extends "base.njk" %} {% block titulo %} record | Details {% endblock %} {%
+block contenido %}
+<div
+  class="card mt-4"
+  style="
+    background-color: #e6ddc4;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  "
+>
+  <div
+    class="card-header text-center"
+    style="
+      background-color: #4b5320;
+      color: #fff;
+      font-size: 1.8rem;
+      font-family: 'Georgia', serif;
+    "
+  >
+    Ficha de un record
+  </div>
 
-{% block titulo %} Record | Details {% endblock %}
+  <div class="card-body">
+    <div class="row">
+      <!-- Información textual del libro -->
+      <div>
+        <p><strong>Name:</strong> {{ record.patient.name }}</p>
+        <p><strong>Surname:</strong> {{ record.patient.surname }}</p>
+        <p><strong>Birth Bate:</strong> {{ record.patient.birthDate }}</p>
+        <p><strong>Address:</strong> {{ record.address }}</p>
+        <p><strong>Insurance number:</strong> {{ record.insuranceNumber }}</p>
+      </div>
+      <div>
+        {% for appointment in record.appointments%}
+        <div
+        style=" 
+        background-color:rgb(242, 233, 209);
+        border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 5px;">
+          <p><strong>Date:</strong> {{ appointment.date }}</p>
+          <p><strong>Physio:</strong> {{ appointment.physio.name }}</p>
+          <p><strong>Diagnosis:</strong> {{ appointment.diagnosis }}</p>
+          <p><strong>Tratment:</strong> {{ appointment.treatment }}</p>
+          <p><strong>Observations:</strong> {{ appointment.observations }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 
-{% block contenido %}
+  <div class="card-footer text-center">
+    <a
+      href="/records"
+      class="btn btn-primary"
+      style="padding: 10px 20px; background-color: #8f9779; border: none"
+      >Volver al listado</a
+    >
+  </div>
+</div>
 
 {% endblock %}

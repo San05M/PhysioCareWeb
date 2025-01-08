@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
       res.status(200).render("physios/physios_list", { physios: resultado });
     })
     .catch((error) => {
-      res.render("error", { error: "Error registrando libro" });
+      res.render("error", { error: "Error registrando physio" });
     });
 });
 
