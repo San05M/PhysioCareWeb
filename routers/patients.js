@@ -3,6 +3,7 @@ const express = require("express");
 let Patient = require(__dirname + "/../models/patient.js");
 
 let router = express.Router();
+const multer = require('multer');
 
 /**
  * Método que define dónde se van a guardar los archivos. 
@@ -10,7 +11,7 @@ let router = express.Router();
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads')
+    cb(null, 'public/images')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "_" + file.originalname)
@@ -42,11 +43,37 @@ router.use((req, res, next) => {
 router.get("/", (req, res) => {
   Patient.find()
     .then(resultado => {
-      res.render("patients/patients_list", { patients: resultadom, dateFormat: dateFormatted});
+      res.render("patients/patients_list", { patients: resultado});
     })
     .catch((error) => {
       res.render("error", { error: "Error registering patient" });
     });
+});
+
+router.get('/new', (req, res) => {
+  Patient.find().then(resultado => {
+      res.render('patients/patient_add', {patient: resultado});
+  }).catch(error => {
+      res.render('error', {error: 'Error adding patient'});
+  });
+});
+
+router.post('/', upload.single('imagen'), (req, res)  => {
+
+  let newPatient = new Patient({
+      name: req.body.name,
+      surname: req.body.surname,
+      birthDate: req.body.birthDate,
+      address: req.body.address,
+      insuranceNumber: req.body.insuranceNumber,
+      image: req.file.image
+  });
+  newPatient.save().then(resultado => {
+      res.redirect(req.baseUrl); 
+  }).catch(error => {
+      res.render('error', 
+          {error: "Error in new patient"});
+  });
 });
 
 /**

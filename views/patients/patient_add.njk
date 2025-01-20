@@ -4,4 +4,47 @@
 
 {% block contenido %}
 
+    <h1 style="color: #4b5320; font-family: 'Georgia', serif;">Add new patient</h1>
+
+    <form action="/patients" method="post" style="background-color: #e6ddc4; padding: 20px; border-radius: 10px;" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name" style="color: #4b5320;">Name:</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Sergi">
+        </div>
+        <div class="form-group">
+            <label for="surname" style="color: #4b5320;">Surname:</label>
+            <input type="text" class="form-control" name="surname" id="surname" placeholder="López Sánchez">
+        </div>
+        <div class="form-group">
+            <label for="address" style="color: #4b5320;">Address</label>
+            <input type="text" class="form-control" name="address" id="address" placeholder="C/ Río Turia, nº34">
+        </div>
+        <div class="form-group">
+            <label for="insuranceNumber" style="color: #4b5320;">Insurance Number:</label>
+            <input type="text" class="form-control" name="insuranceNumber" id="insuranceNumbe" placeholder="12345678">
+        </div>
+        <div class="form-group">
+            <label for="birthDate" style="color: #4b5320;">Birth Date:</label>
+            <input type="date" class="form-control" name="birthDate" id="birthDate">
+        </div>
+        <div class="form-group">
+            <label for="imagen" style="color: #4b5320;">Imagen:</label>
+            <input type="file" class="form-control" name="imagen" id="imagen">
+        </div>
+        <button type="submit" class="btn btn-primary" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
+            Send
+        </button>
+    </form>
+
 {% endblock %}
+
+<style>
+    /* Hover effect para el botón Enviar */
+    .btn-primary:hover {
+        background-color: #7b8a3f; /* Verde musgo */
+        color: #f3efe0;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+</style>

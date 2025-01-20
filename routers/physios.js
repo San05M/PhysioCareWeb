@@ -2,6 +2,7 @@ const express = require("express");
 let Physio = require(__dirname + "/../models/physio.js");
 
 let router = express.Router();
+const multer = require('multer');
 
 /**
  * Método que define dónde se van a guardar los archivos. 
