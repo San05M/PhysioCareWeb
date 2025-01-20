@@ -27,9 +27,7 @@ router.use((req, res, next) => {
 router.get("/", (req, res) => {
   Patient.find()
     .then(resultado => {
-      res
-        .status(200)
-        .render("patients/patients_list", { patients: resultado});
+      res.render("patients/patients_list", { patients: resultadom, dateFormat: dateFormatted});
     })
     .catch((error) => {
       res.render("error", { error: "Error registering patient" });
