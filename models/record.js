@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 let appointmentsSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: true
+    required: [ true, "La fecha de nacimiento es necesaria"],
   },
   physio: {
     type: mongoose.Schema.Types.ObjectId,
@@ -11,17 +11,17 @@ let appointmentsSchema = new mongoose.Schema({
   },
   diagnosis: {
     type: String,
-    required: true,
-    minlength: 10,
-    maxlength: 500
+    required: [ true, "El diagnóstico es necesario"],
+    minlength: [ 10, "Mínimo 10 caracteres" ],
+    maxlength: [ 500, "Máximo 500 caracteres" ],
   },
   treatment:{
     type: String,
-    required: true
+    required: [ true, "El tratamiento es necesario"],
   },
   observations:{
     type: String, 
-    maxlength: 500
+    maxlength: [ 500, "Máximo 500 caracteres" ],
   }
 });
 

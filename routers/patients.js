@@ -1,9 +1,9 @@
 const express = require("express");
+const multer = require('multer');
 
 let Patient = require(__dirname + "/../models/patient.js");
 
 let router = express.Router();
-const multer = require('multer');
 
 /**
  * Método que define dónde se van a guardar los archivos. 
@@ -66,7 +66,7 @@ router.post('/', upload.single('imagen'), (req, res)  => {
       birthDate: req.body.birthDate,
       address: req.body.address,
       insuranceNumber: req.body.insuranceNumber,
-      image: req.file.image
+      imagen: req.file.filename
   });
   newPatient.save().then(resultado => {
       res.redirect(req.baseUrl); 

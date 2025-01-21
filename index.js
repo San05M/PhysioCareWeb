@@ -44,7 +44,7 @@ app.use('/public', express.static(__dirname + '/public'));
 
 /* Cargar middleware para peticiones POST y PUT
  * y enrutadores */
-app.use(express.json());
+
 app.use('/patients', patients);
 app.use('/records', records);
 app.use('/physios', physios);

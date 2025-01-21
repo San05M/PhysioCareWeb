@@ -11,17 +11,16 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
+                     {% if patient.imagen %}
+                        <div class="col-md-4 text-center">
+                            <img src="/public/images/{{ patient.imagen }}" alt="Imagen" class="img-fluid img-thumbnail" style="max-width: 200px; height: auto; border-radius: 10px;">
+                        </div>
+                     {% endif %}
                     <p><strong>Name:</strong> {{ patient.name }}</p>
                     <p><strong>Surname:</strong> {{ patient.surname }}</p>
                     <p><strong>Birth date:</strong> {{ patient.birthDate }}</p>
                     <p><strong>Address:</strong> {{ patient.address }}</p>
                     <p><strong>Insurance Number:</strong> {{ patient.insuranceNumber }}</p>
-                    <p><strong>Image: </strong>
-                     {% if patient.image %}
-                <div class="col-md-4 text-center">
-                    <img src="/public/images/{{ patient.image }}" alt="Image" class="img-fluid img-thumbnail" style="max-width: 200px; height: auto; border-radius: 10px;">
-                </div>
-                {% endif %}
                 </div>
             </div>
         </div>
