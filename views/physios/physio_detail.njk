@@ -11,6 +11,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
+                    {% if physio.imagen %}
+                        <div class="col-md-4 text-center">
+                            <img src="/public/images/{{ physio.imagen }}" alt="Imagen" class="img-fluid img-thumbnail" style="max-width: 200px; height: auto; border-radius: 10px;">
+                        </div>
+                     {% endif %}
                     <p><strong>Name:</strong> {{ physio.name }}</p>
                     <p><strong>Surname:</strong> {{ physio.surname }}</p>
                     <p><strong>Speciality:</strong> {{ physio.specialty }}</p>

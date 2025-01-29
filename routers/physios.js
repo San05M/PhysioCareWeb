@@ -1,8 +1,9 @@
 const express = require("express");
+const multer = require('multer');
+
 let Physio = require(__dirname + "/../models/physio.js");
 
 let router = express.Router();
-const multer = require('multer');
 
 /**
  * Método que define dónde se van a guardar los archivos. 
@@ -10,7 +11,7 @@ const multer = require('multer');
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads')
+    cb(null, 'public/images')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "_" + file.originalname)
@@ -27,6 +28,31 @@ router.use((req, res, next) => {
   console.log(new Date().toString(), "Método:", req.method);
   ", URL:", req.baseUrl;
   next();
+});
+
+router.get('/new', (req, res) => {
+  Physio.find().then(resultado => {
+      res.render('physios/physio_add', {physio: resultado});
+  }).catch(error => {
+      res.render('error', {error: 'Error adding physio'});
+  });
+});
+
+router.post('/', upload.single('imagen'), (req, res)  => {
+
+  let newPhysio = new Physio({
+      name: req.body.name,
+      surname: req.body.surname,
+      specialty: req.body.specialty,
+      licenseNumber: req.body.licenseNumber,
+      imagen: req.file.filename
+  });
+  newPhysio.save().then(resultado => {
+      res.redirect(req.baseUrl); 
+  }).catch(error => {
+      res.render('error', 
+          {error: "Error in new physio"});
+  });
 });
 
 /**

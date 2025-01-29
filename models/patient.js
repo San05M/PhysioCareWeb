@@ -8,6 +8,7 @@ let patientsSchema = new mongoose.Schema({
     maxlength: [ 50, "Máximo 50 caracteres" ],
   },
   surname: {
+    type: String,
     required: [ true, "El nombre es necesario"],
     minlength: [ 2, "Mínimo 2 caracteres" ],
     maxlength: [ 50, "Máximo 50 caracteres" ],

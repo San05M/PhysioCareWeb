@@ -57,7 +57,7 @@ router.get('/new', (req, res) => {
       res.render('error', {error: 'Error adding patient'});
   });
 });
-
+ 
 router.post('/', upload.single('imagen'), (req, res)  => {
 
   let newPatient = new Patient({
