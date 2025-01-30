@@ -1,9 +1,102 @@
-{% extends "base.njk" %}
+{% extends "base.njk" %} {% block titulo %} Physio | Edit {% endblock %} {% block
+contenido %}
 
-{% block titulo %} Physio | Edit {% endblock %}
+<h1 style="color: #4b5320; font-family: 'Georgia', serif">Edit physio</h1>
 
-{% block contenido %}
+<form
+  action="/physios"
+  method="post"
+  style="background-color: #e6ddc4; padding: 20px; border-radius: 10px"
+  enctype="multipart/form-data"
+>
+  <div class="form-group">
+    <label for="name" style="color: #4b5320">Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="name"
+      id="name"
+      placeholder="Sergi"
+    />
+    {% if error.name %}
+    <div class="alert alert-danger" style="color: #4b5320">
+      <p class="text-danger">{{ error.name }}</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="surname" style="color: #4b5320">Surname:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="surname"
+      id="surname"
+      placeholder="López Sánchez"
+    />
+    {% if error.surname %}
+    <div class="alert alert-danger" style="color: #4b5320">
+      <p class="text-danger">{{ error.surname }}</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="specialty" style="color: #4b5320">Specialty</label>
+    <input
+      type="text"
+      class="form-control"
+      name="specialty"
+      id="specialty"
+      placeholder="Sport"
+    />
+    {% if error.specialty %}
+    <div class="alert alert-danger" style="color: #4b5320">
+      <p class="text-danger">{{ error.specialty }}</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="licenseNumber" style="color: #4b5320">Licence Number:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="licenseNumber"
+      id="licenseNumber"
+      placeholder="12345678"
+    />
+    {% if error.licenseNumber%}
+    <div class="alert alert-danger" style="color: #4b5320">
+      <p class="text-danger">{{ error.licenseNumber }}</p>
+    </div>
+    {% endif %}
+  </div>
 
-<p> jaja </p>
+  <div class="form-group">
+    <label for="imagen" style="color: #4b5320">Imagen:</label>
+    <input type="file" class="form-control" name="imagen" id="imagen" />
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Send
+  </button>
+</form>
 
 {% endblock %}
+
+<style>
+  /* Hover effect para el botón Enviar */
+  .btn-primary:hover {
+    background-color: #7b8a3f; /* Verde musgo */
+    color: #f3efe0;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+</style>

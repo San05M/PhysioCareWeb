@@ -5,10 +5,6 @@ let Physio = require(__dirname + "/../models/physio.js");
 
 let router = express.Router();
 
-/**
- * Método que define dónde se van a guardar los archivos. 
- */
-
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/images')
@@ -20,10 +16,6 @@ let storage = multer.diskStorage({
 
 let upload = multer({storage: storage});
 
-/**
- * Middleware to log request information.
- * Logs the current date, HTTP method, and URL.
- */
 router.use((req, res, next) => {
   console.log(new Date().toString(), "Método:", req.method);
   ", URL:", req.baseUrl;
@@ -55,11 +47,6 @@ router.post('/', upload.single('imagen'), (req, res)  => {
   });
 });
 
-/**
- * GET /
- * Retrieve a list of all physios.
- * Renders the physios list view.
- */
 router.get("/", (req, res) => {
   Physio.find()
     .then((resultado) => {

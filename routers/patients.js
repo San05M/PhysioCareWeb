@@ -1,24 +1,26 @@
 const express = require("express");
-const multer = require('multer');
+const multer = require("multer");
+const bcrypt = require("bcrypt");
 
 let Patient = require(__dirname + "/../models/patient.js");
+let User = require(__dirname + "/../models/user.js");
 
 let router = express.Router();
 
 /**
- * Método que define dónde se van a guardar los archivos. 
+ * Método que define dónde se van a guardar los archivos.
  */
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/images')
+    cb(null, "public/images");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "_" + file.originalname)
-  }
-})
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
 
-let upload = multer({storage: storage});
+let upload = multer({ storage: storage });
 
 /**
  * Middleware to log request information.
@@ -42,40 +44,88 @@ router.use((req, res, next) => {
  */
 router.get("/", (req, res) => {
   Patient.find()
-    .then(resultado => {
-      res.render("patients/patients_list", { patients: resultado});
+    .then((resultado) => {
+      res.render("patients/patients_list", { patients: resultado });
     })
     .catch((error) => {
       res.render("error", { error: "Error registering patient" });
     });
 });
 
-router.get('/new', (req, res) => {
-  Patient.find().then(resultado => {
-      res.render('patients/patient_add', {patient: resultado});
-  }).catch(error => {
-      res.render('error', {error: 'Error adding patient'});
-  });
-});
- 
-router.post('/', upload.single('imagen'), (req, res)  => {
-
-  let newPatient = new Patient({
-      name: req.body.name,
-      surname: req.body.surname,
-      birthDate: req.body.birthDate,
-      address: req.body.address,
-      insuranceNumber: req.body.insuranceNumber,
-      imagen: req.file.filename
-  });
-  newPatient.save().then(resultado => {
-      res.redirect(req.baseUrl); 
-  }).catch(error => {
-      res.render('error', 
-          {error: "Error in new patient"});
-  });
+router.get("/new", (req, res) => {
+  Patient.find()
+    .then((resultado) => {
+      res.render("patients/patient_add", { patient: resultado });
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error adding patient" });
+    });
 });
 
+router.post("/", upload.single("imagen"), (req, res) => {
+
+  pass = bcrypt.hashSync(req.body.password, 10);
+
+  let newUser = new User({
+    login: req.body.login,
+    password: pass,
+    rol: "patient",
+  });
+
+  newUser
+    .save()
+    .then((resultado) => {
+      let id = resultado._id;
+
+      let newPatient = new Patient({
+        _id: id,
+        name: req.body.name,
+        surname: req.body.surname,
+        birthDate: req.body.birthDate,
+        address: req.body.address,
+        insuranceNumber: req.body.insuranceNumber,
+        imagen: req.file.imagen
+      });
+
+      newPatient
+        .save()
+        .then((resultado) => {
+          res.redirect(req.baseUrl);
+        })
+        .catch(async (error) => {
+console.log('antes del await');
+          await User.findByIdAndRemove(id);
+
+          let errores = { general: 'Error adding'};
+
+          if (error.code === 11000) {
+            if (error.keyPattern.insuranceNumber) {
+              errores.insuranceNumber = "The number of insurance already exists";
+            }
+          } else {
+            if (error.name) errores.name = error.errors.name.message;
+            if (error.surname) errores.surname = error.errors.surname.message;
+            if (error.birthDate)errores.birthDate = error.errors.birthDate.message;
+            if (error.address) errores.address = error.errors.address.message;
+            if (error.insuranceNumber) errores.insuranceNumber = error.errors.insuranceNumber.message;
+          }
+
+          res.render("patients/patient_add", { errors: errors, data: req.body });
+        });
+    })
+    .catch((error) => {
+      let errors = { general: 'Error adding'};
+      if (error.code === 11000) {
+        if (error.keyPattern.username) {
+          errors.username = "The username already exists";
+        }
+      } else {
+        if (error.login) errors.login = error.errors.login.message;
+        if (error.password) errors.password = error.errors.password.message;
+      }
+      res.render("patients/patient_add", { errors: errors, data: req.body });
+    });
+});
 /**
  * GET /edit:id
  * Retrieve a specific patient for editing by ID.
@@ -83,7 +133,7 @@ router.post('/', upload.single('imagen'), (req, res)  => {
  */
 router.get("/editar/:id", (req, res) => {
   Patient.findById(req.params["id"])
-    .then(resultado => {
+    .then((resultado) => {
       if (resultado) {
         res.render("patients/patient_edit", { patient: resultado });
       } else {
@@ -101,9 +151,10 @@ router.get("/editar/:id", (req, res) => {
  * Renders the patient detail view.
  */
 router.get("/:id", (req, res) => {
-  Patient.findById(req.params["id"]).then(resultado => {
+  Patient.findById(req.params["id"])
+    .then((resultado) => {
       if (resultado) {
-        res.render("patients/patient_detail", { patient: resultado});
+        res.render("patients/patient_detail", { patient: resultado });
       } else {
         res.render("error", { error: "Patient not found" });
       }

@@ -1,6 +1,6 @@
 {% extends "base.njk" %}
 
-{% block titulo %} Patients | Mew {% endblock %}
+{% block titulo %} Patients | New {% endblock %}
 
 {% block contenido %}
 
@@ -8,9 +8,9 @@
 
     <form action="/patients" method="post" style="background-color: #e6ddc4; padding: 20px; border-radius: 10px;" enctype="multipart/form-data">
 
-    {% if error %}
+    {% if errors %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ error.general }} </p>
+        <p class='text-danger'> {{ errors.general }} </p>
         </div>
     {% endif %}
     <div class="form-group">
@@ -18,18 +18,18 @@
             <input type="text" class="form-control" name="login" id="login" placeholder="Usuario">
     {% if error.unique %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ error.general }} </p>
+        <p class='text-danger'> {{ errors.general }} </p>
         </div>
     {% elseif error.login %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ error.login }} </p>
+        <p class='text-danger'> {{ errors.login }} </p>
         </div>
     {% endif %}
     </div>
 
         <div class="form-group">
             <label for="password" style="color: #4b5320;">Password:</label>
-            <input type="text" class="form-control" name="password" id="password" placeholder="*********">
+            <input type="password" class="form-control" name="password" id="password" placeholder="*********">
     {% if error.password %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
         <p class='text-danger'> {{ error.password }} </p>
@@ -66,7 +66,7 @@
         </div>
         <div class="form-group">
             <label for="insuranceNumber" style="color: #4b5320;">Insurance Number:</label>
-            <input type="text" class="form-control" name="insuranceNumber" id="insuranceNumber" placeholder="12345678">
+            <input type="text" class="form-control" name="insuranceNumber" id="insuranceNumber" placeholder="123456789">
                 {% if error.insuranceNumber%}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
         <p class='text-danger'> {{ error.insuranceNumber }} </p>
