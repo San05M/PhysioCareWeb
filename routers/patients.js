@@ -63,7 +63,6 @@ router.get("/new", (req, res) => {
 });
 
 router.post("/", upload.single("imagen"), (req, res) => {
-
   pass = bcrypt.hashSync(req.body.password, 10);
 
   let newUser = new User({
@@ -75,6 +74,7 @@ router.post("/", upload.single("imagen"), (req, res) => {
   newUser
     .save()
     .then((resultado) => {
+
       let id = resultado._id;
 
       let newPatient = new Patient({
@@ -84,8 +84,9 @@ router.post("/", upload.single("imagen"), (req, res) => {
         birthDate: req.body.birthDate,
         address: req.body.address,
         insuranceNumber: req.body.insuranceNumber,
-        imagen: req.file.imagen
       });
+
+      if(req.file) newPatient.imagen = req.file.imagen;
 
       newPatient
         .save()
@@ -93,37 +94,42 @@ router.post("/", upload.single("imagen"), (req, res) => {
           res.redirect(req.baseUrl);
         })
         .catch(async (error) => {
-console.log('antes del await');
-          await User.findByIdAndRemove(id);
+          if(id) await User.findByIdAndDelete(id);
+          
 
-          let errores = { general: 'Error adding'};
+          let errores = { general: "Error adding" };
 
           if (error.code === 11000) {
-            if (error.keyPattern.insuranceNumber) {
-              errores.insuranceNumber = "The number of insurance already exists";
-            }
+            if (error.keyPattern.insuranceNumber) errores.insuranceNumber = "The number of insurance already exists";
           } else {
-            if (error.name) errores.name = error.errors.name.message;
-            if (error.surname) errores.surname = error.errors.surname.message;
-            if (error.birthDate)errores.birthDate = error.errors.birthDate.message;
-            if (error.address) errores.address = error.errors.address.message;
-            if (error.insuranceNumber) errores.insuranceNumber = error.errors.insuranceNumber.message;
+            if (error.errors.name) errores.name = error.errors.name.message;
+            if (error.errors.surname)
+              errores.surname = error.errors.surname.message;
+            if (error.errors.birthDate)
+              errores.birthDate = error.errors.birthDate.message;
+            if (error.errors.address)
+              errores.address = error.errors.address.message;
+            if (error.errors.insuranceNumber)
+              errores.insuranceNumber = error.errors.insuranceNumber.message;
           }
-
-          res.render("patients/patient_add", { errors: errors, data: req.body });
+          res.render("patients/patient_add", {
+            error: errores,
+            data: req.body,
+          });
         });
-    })
+      })
     .catch((error) => {
-      let errors = { general: 'Error adding'};
+      console.log(error);
+      let errores = { general: "Error adding" };
       if (error.code === 11000) {
-        if (error.keyPattern.username) {
-          errors.username = "The username already exists";
+        if (error.keyPattern.login) {
+          errores.login = "The username already exists";
         }
       } else {
-        if (error.login) errors.login = error.errors.login.message;
-        if (error.password) errors.password = error.errors.password.message;
+        if (error.errors.login) errores.login = error.errors.login.message;
+        if (error.errors.password) errores.password = error.errors.password.message;
       }
-      res.render("patients/patient_add", { errors: errors, data: req.body });
+      res.render("patients/patient_add", { error: errores, data: req.body });
     });
 });
 /**

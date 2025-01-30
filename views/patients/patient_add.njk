@@ -10,7 +10,7 @@
 
     {% if errors %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ errors.general }} </p>
+        <p class='text-danger'> {{ error.general }} </p>
         </div>
     {% endif %}
     <div class="form-group">
@@ -18,11 +18,11 @@
             <input type="text" class="form-control" name="login" id="login" placeholder="Usuario">
     {% if error.unique %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ errors.general }} </p>
+        <p class='text-danger'> {{ error.general }} </p>
         </div>
     {% elseif error.login %}
     <div class= 'alert alert-danger' style="color: #4b5320;"> 
-        <p class='text-danger'> {{ errors.login }} </p>
+        <p class='text-danger'> {{ error.login }} </p>
         </div>
     {% endif %}
     </div>
