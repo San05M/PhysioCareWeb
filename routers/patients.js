@@ -74,7 +74,6 @@ router.post("/", upload.single("imagen"), (req, res) => {
   newUser
     .save()
     .then((resultado) => {
-
       let id = resultado._id;
 
       let newPatient = new Patient({
@@ -86,7 +85,7 @@ router.post("/", upload.single("imagen"), (req, res) => {
         insuranceNumber: req.body.insuranceNumber,
       });
 
-      if(req.file) newPatient.imagen = req.file.imagen;
+      if (req.file) newPatient.imagen = req.file.filename;
 
       newPatient
         .save()
@@ -94,13 +93,14 @@ router.post("/", upload.single("imagen"), (req, res) => {
           res.redirect(req.baseUrl);
         })
         .catch(async (error) => {
-          if(id) await User.findByIdAndDelete(id);
-          
+          if (id) await User.findByIdAndDelete(id);
 
           let errores = { general: "Error adding" };
 
           if (error.code === 11000) {
-            if (error.keyPattern.insuranceNumber) errores.insuranceNumber = "The number of insurance already exists";
+            if (error.keyPattern.insuranceNumber)
+              errores.insuranceNumber =
+                "The number of insurance already exists";
           } else {
             if (error.errors.name) errores.name = error.errors.name.message;
             if (error.errors.surname)
@@ -117,7 +117,7 @@ router.post("/", upload.single("imagen"), (req, res) => {
             data: req.body,
           });
         });
-      })
+    })
     .catch((error) => {
       console.log(error);
       let errores = { general: "Error adding" };
@@ -127,7 +127,8 @@ router.post("/", upload.single("imagen"), (req, res) => {
         }
       } else {
         if (error.errors.login) errores.login = error.errors.login.message;
-        if (error.errors.password) errores.password = error.errors.password.message;
+        if (error.errors.password)
+          errores.password = error.errors.password.message;
       }
       res.render("patients/patient_add", { error: errores, data: req.body });
     });
@@ -176,7 +177,7 @@ router.get("/:id", (req, res) => {
  * Redirects to the patient list.
  */
 router.delete("/:id", (req, res) => {
-  Patient.findByIdAndRemove(req.params.id)
+  Patient.findByIdAndDelete(req.params.id)
     .then((resultado) => {
       res.redirect(req.baseUrl);
     })

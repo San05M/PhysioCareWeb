@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const nunjucks = require('nunjucks');
 const dotenv = require("dotenv");
+const methodOverride = require('method-override');
 dotenv.config();
 
 
@@ -30,13 +31,13 @@ app.use(express.json()); // Debe ir antes de los enrutadores y del bootstrap.
 app.use(express.urlencoded({ extended: true }));
 
 // Método para borrar.  Librería externa.
-/* app.use(methodOverride(function (req, res) {
+app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       let method = req.body._method;
       delete req.body._method;
       return method;
     } 
-})); */
+})); 
 
 /* Carga estática*/
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));

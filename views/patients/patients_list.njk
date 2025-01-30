@@ -1,90 +1,98 @@
 {% extends "base.njk" %}
-
-{% block titulo %} Patients | List {% endblock %}
-
-{% block contenido %}
-<div class="container-fluid" style="background-color: #f3efe0; color: #4b5320; min-height: 100vh; padding: 20px;">
-    <h1 class="text-center my-4" style="color: #4b5320; font-family: 'Georgia', serif; font-weight: bold;">
-    List of patients
-    </h1>
-
-    <div class="table-responsive" style="background: #e6ddc4; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-        <table class="table table-borderless align-middle">
-            <thead style="background-color: #8f9779; color: #f3efe0;">
-                <tr>
-                    <th class="text-center" style="font-size: 1.2rem; font-weight: 600;">#</th>
-                    <th style="font-size: 1.2rem; font-weight: 600;">Name</th>
-                    <th style="font-size: 1.2rem; font-weight: 600;">Surname</th>
-                    <th style="font-size: 1.2rem; font-weight: 600;">Address</th>
-                    <th style="font-size: 1.2rem; font-weight: 600;">Insurance number</th>
-                    <th class="text-center" style="font-size: 1.2rem; font-weight: 600;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for patient in patients%}
-                <tr style="background-color: {% if loop.index % 2 == 0 %}#f3efe0{% else %}#e6ddc4{% endif %};">
-                    <td class="text-center">{{ loop.index }}</td>
-                    <td style="font-family: 'Georgia', serif;">{{ patient.name }}</td>
-                    <td style="font-family: 'Georgia', serif;">{{ patient.surname}}</td>
-                    <td style="font-family: 'Georgia', serif;">{{ patient.address }}</td>
-                    <td style="font-family: 'Georgia', serif;">{{ patient.insuranceNumber }}</td>
-                    <td class="text-center d-flex justify-content-center gap-2">
-                        <a href="/patients/{{ patient.id }}" class="btn btn-sm" style="background-color: #8f9779; color: #f3efe0; border: none; padding: 5px 10px; border-radius: 5px;">
-                            File
-                        </a>
-                        <a href="/patients/editar/{{ patient.id }}" class="btn btn-sm" style="background-color: #c3b091; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
-                            Edit
-                        </a>
-                        <form action="/patients/{{ patients.id }}" method="post" class="d-inline">
-                            <input type="hidden" name="_method" value="delete">
-                            <button type="submit" class="btn btn-sm" style="background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="3" class="text-center" style="color: #8f9779; font-size: 1.2rem; font-style: italic;">
-                        No patients to show.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<style>
-    .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-sm {
-        transition: all 0.3s ease;
-    }
-
-    .btn {
-        border-radius: 5px;
-        padding: 8px 15px;
-    }
-    
-    .btn.btn-sm:hover {
-        background-color: #7b8a3f; 
-        color: #fff;
-    }
-
-    .btn.btn-sm:nth-child(2):hover {
-        background-color: #b8a577; 
-        color: #fff;
-    }
-
-    .btn.btn-sm:nth-child(3):hover {
-        background-color: #a68c60; 
-        color: #fff;
-    }
-</style>
-
+{% block titulo %}
+    Patients | List
 {% endblock %}
+{% block contenido %}
+    <div class="container-fluid" style="background-color: #f3efe0; color: #4b5320; min-height: 100vh; padding: 20px;">
+        <h1 class="text-center my-4" style="color: #4b5320; font-family: 'Georgia', serif; font-weight: bold;">
+            List of patients
+        </h1>
+        <div
+            class="table-responsive"
+            style="background: #e6ddc4; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+            <table class="table table-borderless align-middle">
+                <thead style="background-color: #8f9779; color: #f3efe0;">
+                    <tr>
+                        <th class="text-center" style="font-size: 1.2rem; font-weight: 600;">#</th>
+                        <th style="font-size: 1.2rem; font-weight: 600;">Name</th>
+                        <th style="font-size: 1.2rem; font-weight: 600;">Surname</th>
+                        <th style="font-size: 1.2rem; font-weight: 600;">Address</th>
+                        <th style="font-size: 1.2rem; font-weight: 600;">Insurance number</th>
+                        <th class="text-center" style="font-size: 1.2rem; font-weight: 600;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                        <tr style="background-color: {% if loop.index % 2 == 0 %}#f3efe0{% else %}#e6ddc4{% endif %};">
+                            <td class="text-center">{{ loop.index }}</td>
+                            <td style="font-family: 'Georgia', serif;">{{ patient.name }}</td>
+                            <td style="font-family: 'Georgia', serif;">{{ patient.surname }}</td>
+                            <td style="font-family: 'Georgia', serif;">{{ patient.address }}</td>
+                            <td style="font-family: 'Georgia', serif;">{{ patient.insuranceNumber }}</td>
+                            <td class="text-center d-flex justify-content-center gap-2">
+                                <a
+                                    href="/patients/{{ patient.id }}"
+                                    class="btn btn-sm"
+                                    style="background-color: #8f9779; color: #f3efe0; border: none; padding: 5px 10px; border-radius: 5px;">
+                                    File
+                                </a>
+                                <a
+                                    href="/patients/editar/{{ patient.id }}"
+                                    class="btn btn-sm"
+                                    style="background-color: #c3b091; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
+                                    Edit
+                                </a>
+                                <a
+                                    href="/patients/{{ patient.id }}"
+                                    class="btn btn-sm"
+                                    style="background-color: #c3b091; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
+                                    <form action="/patients/{{ patient.id }}" method="post" class="d-inline">
+                                        <input type="hidden" name="_method" value="delete">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm"
+                                                style="background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px;">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center" style="color: #8f9779; font-size: 1.2rem; font-style: italic;">
+                                    No patients to show.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <style>
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+            .btn-sm {
+                transition: all 0.3s ease;
+            }
+            .btn {
+                border-radius: 5px;
+                padding: 8px 15px;
+            }
+            .btn.btn-sm:hover {
+                background-color: #7b8a3f;
+                color: #fff;
+            }
+            .btn.btn-sm:nth-child(2):hover {
+                background-color: #b8a577;
+                color: #fff;
+            }
+            .btn.btn-sm:nth-child(3):hover {
+                background-color: #a68c60;
+                color: #fff;
+            }
+        </style>
+    {% endblock %}
