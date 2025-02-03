@@ -37,7 +37,7 @@
             padding: 10px 20px;
             border-radius: 5px;
           ">
-    New patients
+    New patient
   </a>
   <a
     href="/physios"
@@ -59,7 +59,7 @@
             padding: 10px 20px;
             border-radius: 5px;
           ">
-    New physios
+    New physio
   </a>
   <a
     href="/records"
@@ -71,6 +71,17 @@
             border-radius: 5px;
           ">
     Records
+  </a>
+    <a
+    href="/records/new"
+    class="btn btn-dark"
+    style="
+            background-color: #8f9779;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+          ">
+    New Record 
   </a>
   <form
     action="/patients/find"
@@ -96,6 +107,19 @@
       class="btn btn-sm"
       style=" background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px; ">
       Search Physios
+    </button>
+  </form>
+  <form
+    action="/records/find"
+    method="get"
+    style="background-color: #e6ddc4; padding: 20px; border-radius: 10px"
+    enctype="multipart/form-data">
+    <input type="text" name="surname" planholder="Search by surname"/>
+    <button
+      type="submit"
+      class="btn btn-sm"
+      style=" background-color: #d2b48c; color: #4b5320; border: none; padding: 5px 10px; border-radius: 5px; ">
+      Search records
     </button>
   </form>
 </div>

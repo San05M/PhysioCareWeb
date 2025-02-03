@@ -23,7 +23,7 @@ let rol =(rol) => {
 
 let accesId =() => {
     return (req, res, next) => {
-        if (req.session.user._id !== req.params.id && req.session.user.rol == 'patients') {
+        if (req.session.user._id == req.params.id && req.session.user.rol != 'patients') {
             next();
         } else {
             res.redirect('/login');

@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
-const { id } = require("date-fns/locale");
 
 let Patient = require(__dirname + "/../models/patient.js");
 let User = require(__dirname + "/../models/user.js");
@@ -42,16 +41,22 @@ router.get("/", (req, res) => {
 
 router.get("/find", (req, res) => {
   Patient.find({
-    surname: { $regex: req.query.surname, $options: "i"},
+    surname: { $regex: req.query.surname, $options: "i" },
   })
-  .then((resultado) => {
-    if(resultado.length > 0) res.render("patients/patients_list", { patients: resultado });
-    else res.render("error", { error: "No patients were found associated with the surname entered." });
-  })
-  .catch((error) => {
-    res.render("error", { error: "There was a problem processing the search. Please try again later."});
-  })
-})
+    .then((resultado) => {
+      if (resultado.length > 0)
+        res.render("patients/patients_list", { patients: resultado });
+      else
+        res.render("error", {
+          error: "No patients were found associated with the surname entered.",
+        });
+    })
+    .catch((error) => {
+      res.render("error", {
+        error: "There was a problem processing the search. Please try again later.",
+      });
+    });
+});
 
 router.get("/new", (req, res) => {
   Patient.find()
@@ -164,7 +169,7 @@ router.post("/", upload.single("imagen"), (req, res) => {
 });
 
 router.post("/:id", upload.single("imagen"), (req, res) => {
-  let newImagen= "";
+  let newImagen = "";
   if (req.file) newImagen = req.file.filename;
 
   Patient.findByIdAndUpdate(
@@ -196,9 +201,12 @@ router.post("/:id", upload.single("imagen"), (req, res) => {
           errores.licenseNumber = "The number of insurance already exists";
       } else {
         if (error.errors.name) errores.name = error.errors.name.message;
-        if (error.errors.surname) errores.surname = error.errors.surname.message;
-        if (error.errors.specialty) errores.specialty = error.errors.specialty.message;
-        if (error.errors.licenseNumber)  errores.licenseNumber = error.errors.licenseNumber.message;
+        if (error.errors.surname)
+          errores.surname = error.errors.surname.message;
+        if (error.errors.specialty)
+          errores.specialty = error.errors.specialty.message;
+        if (error.errors.licenseNumber)
+          errores.licenseNumber = error.errors.licenseNumber.message;
       }
       res.render("patients/patient_edit", {
         error: errores,

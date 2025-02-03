@@ -1,7 +1,89 @@
 {% extends "base.njk" %}
 
-{% block titulo %} Record | add appointment {% endblock %}
+{% block titulo %} Appointment | add appointment {% endblock %}
 
 {% block contenido %}
 
+<h1 style="color: #4b5320; font-family: 'Georgia', serif;">Add new appointment</h1>
+
+<form
+  action="/records/appointments/new/{{ id }}"
+  method="post"
+  style="background-color: #e6ddc4; padding: 20px; border-radius: 10px"
+>
+<div class="form-group">
+    <label for="licenseNumber" style="color: #4b5320">License Number: </label>
+    <input
+      type="text"
+      class="form-control"
+      name="licenseNumber"
+      id="licenseNumber"
+      placeholder="License Number"
+    />
+  </div>
+  <div class="form-group">
+    <label for="date" style="color: #4b5320">Date: </label>
+    <input
+      type="date"
+      class="form-control"
+      name="date"
+      id="date"
+      placeholder="Select appointment date"
+    />
+  </div>
+  <div class="form-group">
+    <label for="diagnosis" style="color: #4b5320">Diagnosis: </label>
+    <input
+      type="text"
+      class="form-control"
+      name="diagnosis"
+      id="diagnosis"
+      placeholder="Diagnosis"
+    />
+  </div>
+  <div class="form-group">
+    <label for="treatment" style="color: #4b5320">Treatment: </label>
+    <input
+      type="text"
+      class="form-control"
+      name="treatment"
+      id="treatment"
+      placeholder="Treatment"
+    />
+  </div>
+  <div class="form-group">
+    <label for="observations" style="color: #4b5320">Observations: </label>
+    <textarea
+      class="form-control"
+      name="observations"
+      id="observations"
+      placeholder="Observations"
+    ></textarea>
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn-primary"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Send
+  </button>
+</form>
+
 {% endblock %}
+
+<style>
+  /* Hover effect para el botón Enviar */
+  .btn-primary:hover {
+    background-color: #7b8a3f; /* Verde musgo */
+    color: #f3efe0;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+</style>
