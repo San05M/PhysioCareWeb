@@ -183,7 +183,7 @@ router.post("/:id", upload.single("imagen"), (req, res) => {
   )
     .then((resultado) => {
       if (resultado) {
-        res.render("patients/patient_edit", { patient: resultado });
+        res.render("patients/patient_details", { patient: resultado });
       } else {
         res.render("error", { error: "Paciente no encontrado" });
       }

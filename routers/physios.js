@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
 
-
 let Physio = require(__dirname + "/../models/physio.js");
 let User = require(__dirname + "/../models/user.js");
 
@@ -25,6 +24,18 @@ router.use((req, res, next) => {
   next();
 });
 
+router.get("/", (req, res) => {
+  Physio.find()
+    .then((resultado) => {
+      res.status(200).render("physios/physios_list", { physios: resultado });
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error registrando physio" });
+    });
+});
+
+//find
+
 router.get("/new", (req, res) => {
   Physio.find()
     .then((resultado) => {
@@ -32,6 +43,34 @@ router.get("/new", (req, res) => {
     })
     .catch((error) => {
       res.render("error", { error: "Error adding physio" });
+    });
+});
+
+router.get("/editar/:id", (req, res) => {
+  Physio.findById(req.params["id"])
+    .then((resultado) => {
+      if (resultado) {
+        res.render("physios/physio_edit", { physio: resultado });
+      } else {
+        res.render("error", { error: "Physio not found" });
+      }
+    })
+    .catch((error) => {
+      res.render("error", { error: "Physio not found" });
+    });
+});
+
+router.get("/:id", (req, res) => {
+  Physio.findById(req.params["id"])
+    .then((resultado) => {
+      if (resultado) {
+        res.render("physios/physio_detail", { physio: resultado });
+      } else {
+        res.render("error", { error: "Physio not found" });
+      }
+    })
+    .catch((error) => {
+      res.render("error", { error: "Error findingphysio" });
     });
 });
 
@@ -72,9 +111,12 @@ router.post("/", upload.single("imagen"), (req, res) => {
             errores.licenseNumber = "The number of insurance already exists";
         } else {
           if (error.errors.name) errores.name = error.errors.name.message;
-          if (error.errors.surname)errores.surname = error.errors.surname.message;
-          if (error.errors.specialty)errores.specialty = error.errors.specialty.message;
-          if (error.errors.licenseNumber)errores.licenseNumber = error.errors.licenseNumber.message;
+          if (error.errors.surname)
+            errores.surname = error.errors.surname.message;
+          if (error.errors.specialty)
+            errores.specialty = error.errors.specialty.message;
+          if (error.errors.licenseNumber)
+            errores.licenseNumber = error.errors.licenseNumber.message;
         }
         res.render("physios/physio_add", {
           error: errores,
@@ -89,66 +131,67 @@ router.post("/", upload.single("imagen"), (req, res) => {
           }
         } else {
           if (error.errors.login) errores.login = error.errors.login.message;
-          if (error.errors.password) errores.password = error.errors.password.message;
+          if (error.errors.password)
+            errores.password = error.errors.password.message;
         }
         res.render("physios/physio_add", { error: errores, data: req.body });
       });
   });
 });
 
-router.get("/", (req, res) => {
-  Physio.find()
-    .then((resultado) => {
-      res.status(200).render("physios/physios_list", { physios: resultado });
-    })
-    .catch((error) => {
-      res.render("error", { error: "Error registrando physio" });
-    });
-});
+router.post("/:id", upload.single("imagen"), (req, res) => {
+  let newImagen = "";
+  if (req.file) newImagen = req.file.filename;
 
-/**
- * GET /edit/:id
- * Retrieve a specific physio for editing by ID.
- * Renders the physio edit view.
- */
-router.get("/editar/:id", (req, res) => {
-  Physio.findById(req.params["id"])
-    .then((resultado) => {
-      if (resultado) {
-        res.render("physios/physio_edit", { physio: resultado });
-      } else {
-        res.render("error", { error: "Physio not found" });
-      }
-    })
-    .catch((error) => {
-      res.render("error", { error: "Physio not found" });
-    });
-});
-
-/**
- * GET /:id
- * Retrieve details of a specific physio by ID.
- * Renders the physio detail view.
- */
-router.get("/:id", (req, res) => {
-  Physio.findById(req.params["id"])
+  Physio.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        name: req.body.name,
+        surname: req.body.surname,
+        specialty: req.body.specialty,
+        licenseNumber: req.body.licenseNumber,
+        imagen: newImagen,
+      },
+    },
+    { new: true, runValidators: true }
+  )
     .then((resultado) => {
       if (resultado) {
         res.render("physios/physio_detail", { physio: resultado });
       } else {
-        res.render("error", { error: "Physio not found" });
+        res.render("error", { error: "Physio not found." });
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Error findingphysio" });
+      let errores = { general: "Error adding" };
+
+      if (error.code === 11000) {
+        if (error.keyPattern.licenseNumber)
+          errores.licenseNumber = "The number of license already exists";
+      } else {
+        if (error.errors.name) errores.name = error.errors.name.message;
+        if (error.errors.surname)
+          errores.surname = error.errors.surname.message;
+        if (error.errors.specialty)
+          errores.specialty = error.errors.specialty.message;
+        if (error.errors.licenseNumber)
+          errores.licenseNumber = error.errors.licenseNumber.message;
+      }
+      res.render("physios/physio_edit", {
+        error: errores,
+        physio: {
+          id: req.params.id,
+          name: req.body.name,
+          surname: req.body.surname,
+          specialty: req.body.specialty,
+          licenseNumber: req.body.licenseNumber,
+          imagen: newImagen,
+        },
+      });
     });
 });
 
-/**
- * DELETE /:id
- * Remove a physio by ID.
- * Redirects to the physio list.
- */
 router.delete("/:id", (req, res) => {
   Physio.findByIdAndDelete(req.params.id)
     .then((resultado) => {
