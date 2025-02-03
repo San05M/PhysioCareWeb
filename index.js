@@ -1,10 +1,9 @@
 console.log("Iniciando servidor...");
 
 const express = require('express');
-
+const session = require('express-session');
 const mongoose = require('mongoose');
 const nunjucks = require('nunjucks');
-
 const dotenv = require("dotenv");
 
 const methodOverride = require('method-override');
@@ -13,19 +12,30 @@ dotenv.config();
 
 /* Enrutadores */
 const patients = require(__dirname + '/routers/patients.js');
-
 const physios = require(__dirname + '/routers/physios.js');
-
 const records = require(__dirname + '/routers/records.js');
-
 const auth = require(__dirname + '/routers/auth.js');
+
+/* Inicializar Express */
+let app = express();
+
+app.use(session({
+    secret: '1234',
+    resave: true,
+    saveUninitialized: false,
+    expires: new Date(Date.now() + (30 * 60 * 1000))
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
 /* Conectar con BD en Mongo */
 mongoose.connect('mongodb://127.0.0.1:27017/physiocare')
     .then(() => console.log("Conectado a MongoDB"))
     .catch(err => console.error("Error conectando a MongoDB:", err));
 
-/* Inicializar Express */
-let app = express();
 
 app.set('view engine', 'njk');
 
