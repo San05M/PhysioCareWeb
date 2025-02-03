@@ -3,10 +3,6 @@ const express = require("express");
 let { Record } = require(__dirname + "/../models/record.js");
 let router = express.Router();
 
-/**
- * Middleware to log request information.
- * Logs the current date, HTTP method, and URL.
- */
 router.use((req, res, next) => {
   console.log(
     new Date().toString(),
@@ -18,11 +14,6 @@ router.use((req, res, next) => {
   next();
 });
 
-/**
- * GET /
- * Retrieve a list of all records, including patient details.
- * Renders the records list view.
- */
 router.get("/", (req, res) => {
   Record.find()
     .populate("patient")
@@ -34,11 +25,6 @@ router.get("/", (req, res) => {
     });
 });
 
-/**
- * GET /new/:id
- * Retrieve a specific record by ID for a new appointment.
- * Renders the record appointment view.
- */
 router.get('/new/:id', (req, res) => {
   Record.findById(req.params['id']).then(resultado => {
       res.render('records/record_add_appointment', {records: resultado});
@@ -47,11 +33,6 @@ router.get('/new/:id', (req, res) => {
   });
 });
 
-/**
- * GET /:id
- * Retrieve details of a specific record by ID.
- * Renders the record detail view.
- */
 router.get("/:id", (req, res) => {
   Record.findById(req.params.id)
     .populate("patient")

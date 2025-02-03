@@ -34,7 +34,18 @@ router.get("/", (req, res) => {
     });
 });
 
-//find
+router.get("/find", (req, res) => {
+  Physio.find({
+    specialty: { $regex: req.query.specialty, $options: "i"},
+  })
+  .then((resultado) => {
+    if(resultado.length > 0) res.render("physios/physios_list", { physios: resultado });
+    else res.render("error", { error: "No physios were found associated with the speciality entered." });
+  })
+  .catch((error) => {
+    res.render("error", { error: "There was a problem processing the search. Please try again later."});
+  })
+})
 
 router.get("/new", (req, res) => {
   Physio.find()
