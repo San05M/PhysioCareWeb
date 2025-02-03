@@ -1,15 +1,18 @@
 console.log("Iniciando servidor...");
 
 const express = require('express');
+console.log("prueba")
 const session = require('express-session');
+console.log("prueba2")
 const mongoose = require('mongoose');
+console.log("prueba3")
 const nunjucks = require('nunjucks');
 const dotenv = require("dotenv");
 
 const methodOverride = require('method-override');
 
 dotenv.config();
-
+console.log("prueba")
 /* Enrutadores */
 const patients = require(__dirname + '/routers/patients.js');
 const physios = require(__dirname + '/routers/physios.js');

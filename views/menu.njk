@@ -7,7 +7,7 @@
         border-radius: 10px;
       ">
 
-      {% if (session and session.login) %}
+      {% if (session and (session.login or session.rol == "admin")) %}
    <a
     href="/auth/logout"
     class="btn btn-dark"
@@ -32,6 +32,7 @@
     Login
   </a>
   {% endif %}
+{% if (session and (session.rol == "admin"  or session.rol == "physio" )) %}
   <a
     href="/patients"
     class="btn btn-dark"
@@ -137,6 +138,7 @@
       Search records
     </button>
   </form>
+ {% endif %}
 </div>
 <style>
   div {

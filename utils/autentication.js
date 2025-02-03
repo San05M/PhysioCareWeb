@@ -2,33 +2,24 @@ const session = require('express-session');
 const User = require(__dirname + '/../models/user.js');
 
 let atutentication = (req, res, next) => {
-
-    if (req.session.user) {
+    if (req.session.login) {
         next();
     } else {
-        res.redirect('/login');
+        console.log(req.session.login)
+        res.redirect('/auth/login');
     }
-
 }
 
 let rol =(rol) => {
     return (req, res, next) => {
-        if (req.session.user.rol == rol) {
+        console.log(rol, req.session.rol)
+        if (rol.some(r => r === req.session.rol)) {
             next();
         } else {
-            res.redirect('/login');
+            console.log(req.session.rol, rol)
+            res.redirect('/auth/login');
         }
     }
 }
 
-let accesId =() => {
-    return (req, res, next) => {
-        if (req.session.user._id == req.params.id && req.session.user.rol != 'patients') {
-            next();
-        } else {
-            res.redirect('/login');
-        }
-    }
-}
-
-module.exports = { atutentication: atutentication, rol: rol, accesId: accesId };
+module.exports = { atutentication: atutentication, rol: rol };

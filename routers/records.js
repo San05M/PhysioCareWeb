@@ -3,6 +3,7 @@ const express = require("express");
 let { Record } = require(__dirname + "/../models/record.js");
 let Patient = require(__dirname + "/../models/patient.js");
 let Physio = require(__dirname + "/../models/physio.js");
+const { atutentication, rol } = require(__dirname + "/../utils/autentication.js");
 let router = express.Router();
 
 router.use((req, res, next) => {
@@ -16,7 +17,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get("/", (req, res) => {
+router.get("/", atutentication, rol(["admin", "physio"]), (req, res) => {
   Record.find()
     .populate("patient")
     .then((resultado) => {
@@ -29,7 +30,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/find", (req, res) => {
+router.get("/find", atutentication, rol(["admin", "physio"]), (req, res) => {
   console.log(Patient);
   Patient.find({
     surname: { $regex: req.query.surname, $options: "i" },
@@ -58,7 +59,7 @@ router.get("/find", (req, res) => {
     });
 });
 
-router.get("/new", (req, res) => {
+router.get("/new", atutentication, rol(["admin", "physio"]), (req, res) => {
   Record.findById(req.params["id"])
     .then((resultado) => {
       res.render("records/record_add", { records: resultado });
@@ -68,11 +69,11 @@ router.get("/new", (req, res) => {
     });
 });
 
-router.get("/appointments/new/:id", (req, res) => {
+router.get("/appointments/new/:id", atutentication, rol(["admin", "physio"]), (req, res) => {
  res.render("records/record_add_appointment", {id: req.params.id});
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", atutentication, rol(["admin", "physio"]),(req, res) => {
   Record.findById(req.params.id)
     .populate("patient")
     .then((resultado) => {
@@ -89,7 +90,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", atutentication, rol(["admin", "physio"]),(req, res) => {
   Patient.findOne({ insuranceNumber: req.body.insuranceNumber })
     .then((resultado) => {
       console.log(resultado);
@@ -113,7 +114,7 @@ router.post("/", (req, res) => {
     .catch((error) => res.render("error", { error: "Record not found" }));
 });
 
-router.post("/appointments/new/:id", (req, res) => {
+router.post("/appointments/new/:id", atutentication, rol(["admin", "physio"]),(req, res) => {
   Physio.findOne({licenseNumber: req.body.licenseNumber})
     .then((resultado) => {
       if (resultado) {

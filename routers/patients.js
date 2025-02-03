@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
 
+const { atutentication, rol } = require(__dirname + "/../utils/autentication.js");
 let Patient = require(__dirname + "/../models/patient.js");
 let User = require(__dirname + "/../models/user.js");
 
@@ -29,7 +30,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get("/", (req, res) => {
+router.get("/", atutentication, rol(["admin", "physio"]),(req, res) => {
   Patient.find()
     .then((resultado) => {
       res.render("patients/patients_list", { patients: resultado });
@@ -39,7 +40,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/find", (req, res) => {
+router.get("/find", atutentication, rol(["admin", "physio"]),(req, res) => {
   Patient.find({
     surname: { $regex: req.query.surname, $options: "i" },
   })
@@ -58,7 +59,7 @@ router.get("/find", (req, res) => {
     });
 });
 
-router.get("/new", (req, res) => {
+router.get("/new", atutentication, rol(["admin", "physio"]),(req, res) => {
   Patient.find()
     .then((resultado) => {
       res.render("patients/patient_add", { patient: resultado });
@@ -68,17 +69,17 @@ router.get("/new", (req, res) => {
     });
 });
 
-router.get("/editar/:id", (req, res) => {
+router.get("/editar/:id", atutentication, rol(["admin", "physio"]),(req, res) => {
   Patient.findById(req.params["id"])
     .then((resultado) => {
       if (resultado) {
         res.render("patients/patient_edit", { patient: resultado });
       } else {
-        res.render("error", { error: "Patient not found" });
+        res.render("error", atutentication, rol(["admin", "physio"]),{ error: "Patient not found" });
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Patient not found" });
+      res.render("error", atutentication, rol(["admin", "physio"]),{ error: "Patient not found" });
     });
 });
 
@@ -96,7 +97,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", upload.single("imagen"), (req, res) => {
+router.post("/", upload.single("imagen"), atutentication, rol(["admin", "physio"]), (req, res) => {
   pass = bcrypt.hashSync(req.body.password, 10);
 
   let newUser = new User({
@@ -168,7 +169,7 @@ router.post("/", upload.single("imagen"), (req, res) => {
     });
 });
 
-router.post("/:id", upload.single("imagen"), (req, res) => {
+router.post("/:id", upload.single("imagen"),  atutentication, rol(["admin", "physio"]), (req, res) => {
   let newImagen = "";
   if (req.file) newImagen = req.file.filename;
 
@@ -222,7 +223,7 @@ router.post("/:id", upload.single("imagen"), (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", atutentication, rol(["admin", "physio"]), (req, res) => {
   Patient.findByIdAndDelete(req.params.id)
     .then((resultado) => {
       res.redirect(req.baseUrl);
