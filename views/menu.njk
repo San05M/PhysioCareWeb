@@ -1,27 +1,110 @@
-<div class="alert alert-secondary" style="background-color: #e6ddc4; color: #4b5320; padding: 20px; border-radius: 10px;">
-    <a href="/login" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        Login
-    </a>
-    <a href="/patients" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        Patients
-    </a>
-    <a href="/patients/new" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        New patients
-    </a>
-    <a href="/physios" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        Physios 
-    </a>
-      <a href="/physios/new" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        New physios
-    </a>
-    <a href="/records" class="btn btn-dark" style="background-color: #8f9779; border: none; padding: 10px 20px; border-radius: 5px;">
-        Records
-    </a>
+<div
+  class="alert alert-secondary"
+  style="
+    background-color: #e6ddc4;
+    color: #4b5320;
+    padding: 20px;
+    border-radius: 10px;
+  "
+>
+  <a
+    href="/login"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Login
+  </a>
+  <a
+    href="/patients"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Patients
+  </a>
+  <a
+    href="/patients/new"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    New patients
+  </a>
+  <a
+    href="/physios"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Physios
+  </a>
+  <a
+    href="/physios/new"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    New physios
+  </a>
+  <a
+    href="/records"
+    class="btn btn-dark"
+    style="
+      background-color: #8f9779;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    "
+  >
+    Records
+  </a>
+  <form
+    action="/patients/find"
+    method="get"
+    style="background-color: #e6ddc4; padding: 20px; border-radius: 10px"
+    enctype="multipart/form-data"
+  >
+    <input type="text" name="surname" planholder="Search by surname" />
+    <button
+      type="submit"
+      class="btn btn-sm"
+      style="
+        background-color: #d2b48c;
+        color: #4b5320;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+      "
+    >
+      Search Patient
+    </button>
+  </form>
 </div>
 
 <style>
-    .btn-dark:hover {
-        background-color: #7b8a3f; /* Verde musgo */
-        color: #f3efe0;
-    }
+  .btn-dark:hover {
+    background-color: #7b8a3f; /* Verde musgo */
+    color: #f3efe0;
+  }
 </style>

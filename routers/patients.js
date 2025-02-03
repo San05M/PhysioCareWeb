@@ -1,15 +1,12 @@
 const express = require("express");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
+const { id } = require("date-fns/locale");
 
 let Patient = require(__dirname + "/../models/patient.js");
 let User = require(__dirname + "/../models/user.js");
 
 let router = express.Router();
-
-/**
- * Método que define dónde se van a guardar los archivos.
- */
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -22,10 +19,6 @@ let storage = multer.diskStorage({
 
 let upload = multer({ storage: storage });
 
-/**
- * Middleware to log request information.
- * Logs the current date, HTTP method, and URL.
- */
 router.use((req, res, next) => {
   console.log(
     new Date().toString(),
@@ -37,11 +30,6 @@ router.use((req, res, next) => {
   next();
 });
 
-/**
- * GET /
- * Retrieve a list of all patients.
- * Renders the patients list view.
- */
 router.get("/", (req, res) => {
   Patient.find()
     .then((resultado) => {
@@ -52,6 +40,19 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/find", (req, res) => {
+  Patient.find({
+    surname: { $regex: req.query.surname, $options: "i"},
+  })
+  .then((resultado) => {
+    if(resultado.length > 0) res.render("patients/patients_list", { patients: resultado });
+    else res.render("error", { error: "No patients were found associated with the surname entered." });
+  })
+  .catch((error) => {
+    res.render("error", { error: "There was a problem processing the search. Please try again later."});
+  })
+})
+
 router.get("/new", (req, res) => {
   Patient.find()
     .then((resultado) => {
@@ -59,6 +60,34 @@ router.get("/new", (req, res) => {
     })
     .catch((error) => {
       res.render("error", { error: "Error adding patient" });
+    });
+});
+
+router.get("/editar/:id", (req, res) => {
+  Patient.findById(req.params["id"])
+    .then((resultado) => {
+      if (resultado) {
+        res.render("patients/patient_edit", { patient: resultado });
+      } else {
+        res.render("error", { error: "Patient not found" });
+      }
+    })
+    .catch((error) => {
+      res.render("error", { error: "Patient not found" });
+    });
+});
+
+router.get("/:id", (req, res) => {
+  Patient.findById(req.params["id"])
+    .then((resultado) => {
+      if (resultado) {
+        res.render("patients/patient_detail", { patient: resultado });
+      } else {
+        res.render("error", { error: "Patient not found" });
+      }
+    })
+    .catch((error) => {
+      res.render("error", { error: "Patient not found" });
     });
 });
 
@@ -133,13 +162,25 @@ router.post("/", upload.single("imagen"), (req, res) => {
       res.render("patients/patient_add", { error: errores, data: req.body });
     });
 });
-/**
- * GET /edit:id
- * Retrieve a specific patient for editing by ID.
- * Renders the patient edit view.
- */
-router.get("/editar/:id", (req, res) => {
-  Patient.findById(req.params["id"])
+
+router.post("/:id", upload.single("imagen"), (req, res) => {
+  let newImagen= "";
+  if (req.file) newImagen = req.file.filename;
+
+  Patient.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        name: req.body.name,
+        surname: req.body.surname,
+        birthDate: req.body.birthDate,
+        address: req.body.address,
+        insuranceNumber: req.body.insuranceNumber,
+        imagen: newImagen,
+      },
+    },
+    { new: true, runValidators: true }
+  )
     .then((resultado) => {
       if (resultado) {
         res.render("patients/patient_edit", { patient: resultado });
@@ -148,34 +189,31 @@ router.get("/editar/:id", (req, res) => {
       }
     })
     .catch((error) => {
-      res.render("error", { error: "Paciente no encontrado 2" });
-    });
-});
+      let errores = { general: "Error adding" };
 
-/**
- * GET /:id
- * Retrieve details of a specific patient by ID.
- * Renders the patient detail view.
- */
-router.get("/:id", (req, res) => {
-  Patient.findById(req.params["id"])
-    .then((resultado) => {
-      if (resultado) {
-        res.render("patients/patient_detail", { patient: resultado });
+      if (error.code === 11000) {
+        if (error.keyPattern.licenseNumber)
+          errores.licenseNumber = "The number of insurance already exists";
       } else {
-        res.render("error", { error: "Patient not found" });
+        if (error.errors.name) errores.name = error.errors.name.message;
+        if (error.errors.surname) errores.surname = error.errors.surname.message;
+        if (error.errors.specialty) errores.specialty = error.errors.specialty.message;
+        if (error.errors.licenseNumber)  errores.licenseNumber = error.errors.licenseNumber.message;
       }
-    })
-    .catch((error) => {
-      res.render("error", { error: "Patient not found" });
+      res.render("patients/patient_edit", {
+        error: errores,
+        patient: {
+          id: req.params.id,
+          name: req.body.name,
+          surname: req.body.surname,
+          birthDate: req.body.birthDate,
+          address: req.body.address,
+          insuranceNumber: req.body.insuranceNumber,
+        },
+      });
     });
 });
 
-/**
- * DELETE /:id
- * Remove a patient by ID.
- * Redirects to the patient list.
- */
 router.delete("/:id", (req, res) => {
   Patient.findByIdAndDelete(req.params.id)
     .then((resultado) => {

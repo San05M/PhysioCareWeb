@@ -7,6 +7,29 @@
         <h1 class="text-center my-4" style="color: #4b5320; font-family: 'Georgia', serif; font-weight: bold;">
             List of patients
         </h1>
+        <div>
+            <form
+    action="/patients/find"
+    method="get"
+    style="background-color: #e6ddc4; padding: 20px; border-radius: 10px"
+    enctype="multipart/form-data"
+  >
+    <input type="text" name="surname" planholder="Search by surname" />
+    <button
+      type="submit"
+      class="btn btn-sm"
+      style="
+        background-color: #d2b48c;
+        color: #4b5320;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+      "
+    >
+      Search Patient
+    </button>
+  </form>
+    </div>
         <div
             class="table-responsive"
             style="background: #e6ddc4; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
@@ -70,6 +93,10 @@
             </div>
         </div>
         <style>
+            div {
+            margin:10px;
+            }
+
             .btn:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
