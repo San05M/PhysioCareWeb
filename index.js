@@ -35,9 +35,7 @@ app.use((req, res, next) => {
 });
 
 /* Conectar con BD en Mongo */
-mongoose.connect('mongodb://127.0.0.1:27017/physiocare')
-    .then(() => console.log("Conectado a MongoDB"))
-    .catch(err => console.error("Error conectando a MongoDB:", err));
+mongoose.connect('mongodb://mymongodb:27017/physiocare');
 
 
 app.set('view engine', 'njk');

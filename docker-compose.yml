@@ -1,0 +1,21 @@
+services:
+  app:
+    container_name: appphysiocareweb
+    build: .
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mymongodb
+      
+	mymongodb:
+	  container_name: mymongodatabase
+	  image: mongo
+	  ports:
+	    - "27018:27017"
+	  restart: unless-stopped
+	  volumes:
+	    - ../data_docker:/data/db
