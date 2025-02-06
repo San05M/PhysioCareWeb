@@ -68,6 +68,10 @@ app.use('/records', records);
 app.use('/physios', physios);
 app.use('/auth', auth);
 
+app.get('/', (req, res) => {
+  res.redirect('/public/index.html'); //Acceso a la página príncipal de índice
+  });
+
 app.listen(8080, () => {
     console.log("Servidor iniciado en http://localhost:8080");
 });
