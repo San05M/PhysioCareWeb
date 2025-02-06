@@ -72,6 +72,18 @@ app.get('/', (req, res) => {
   res.redirect('/public/index.html'); //Acceso a la página príncipal de índice
   });
 
+const saltRounds = 10;
+  const hash = bcrypt.hashSync("123456", saltRounds);
+
+  let admin = new User({
+    login: "sandra",
+    password: hash,
+    rol: "admin"
+  });
+
+  admin.save();
+
+
 app.listen(8080, () => {
     console.log("Servidor iniciado en http://localhost:8080");
 });
